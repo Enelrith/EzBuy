@@ -66,6 +66,10 @@ app.get("/", (req, res) => {
   console.log(req.session.username);
   console.log(req.sessionID);
 });
+req.session.save((err) => {
+    if (err) {
+      console.log(err);
+    }
 app.get("/register", (req, res) => {
   res.render("register");
 });
