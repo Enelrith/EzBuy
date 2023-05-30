@@ -20,6 +20,7 @@ const sessionStore = new MySQLStore({
   clearExpired: true,
   checkExpirationInterval: 900000,
   expiration: 86400000,
+  ssl: { ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem") },
 });
 var db = mysql.createConnection({
   host: process.env.DATABASE_HOST,
