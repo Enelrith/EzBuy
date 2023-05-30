@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ez-Buy - Cart</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                    <img src="/logo/logo-no-background.svg" height="50" alt="Logo" loading="lazy" />
+                </a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/store">Store</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Cart</a>
+                    </li>
+                </ul>
+            </div>
+            <form action="/search" method="POST">
+                <div class="input-group rounded">
+                    <li> <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-addon" name="search" /></li>
+                    <li><span><button type="submit" class="input-group-text border-0" id="search-addon"
+                                name="searchbtn">Search</button></span></li>
+                </div>
+            </form>
+            <form action="/logout" method="GET" class="d-flex cardmarginleft">
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+    </nav>
+    <section class="h-100" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-10">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-normal mb-0 text-black">Shopping Cart</h3>
+                    </div>
+                    <div class="card rounded-3 mb-4">
+                        {{#each cart}}
+
+                        <div class="card-body p-4">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-md-2 col-lg-2 col-xl-2">
+                                    <a name="desc" href="/store/{{this.id}}"><img src="/Product Images/{{this.id}}.jpg"
+                                            class="img-fluid rounded-3" alt="product {{this.id}}"></a>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-xl-3">
+                                    <p class="lead fw-normal mb-2">{{this.name}}</p>
+                                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                        <form action="/removeqt" method="POST">
+                                            <input type="hidden" name="id" value="{{this.id}}"><input type="hidden"
+                                                name="quantity" value="{{this.quantity}}"><input type="hidden"
+                                                name="price" value="{{this.price}}"><button name="removeqt"
+                                                class="btn btn-primary cardmarginright">-</button>
+                                        </form>
+                                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                            <h5 class="mb-0">{{this.quantity}}</h5>
+                                        </div>
+                                        <form action="/increaseqt" method="POST">
+                                            <input type="hidden" name="id" value="{{this.id}}"><input type="hidden"
+                                                name="quantity" value="{{this.quantity}}"><button name="increaseqt"
+                                                class="btn btn-primary cardmarginleft">+</i></button>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                        <h6 class="mb-0 price">{{this.displayPrice}}</h6>
+                                    </div>
+
+                                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                        <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-separator"></div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <form method="GET" action="/checkout">
+                    <button name="checkout" class="btn btn-primary">Proceed to Checkout</button>
+                </form>
+            </div>
+
+    </section>
+    </div>
+</body>
+
+</html>

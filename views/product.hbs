@@ -1,0 +1,98 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ez-Buy - Store</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                    <img src="/logo/logo-no-background.svg" height="50" alt="Logo" loading="lazy" />
+                </a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/store">Store</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Cart</a>
+                    </li>
+                </ul>
+            </div>
+            <form action="/search" method="POST">
+                <div class="input-group rounded">
+                    <li> <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-addon" name="search" /></li>
+                    <li><span><button type="submit" class="input-group-text border-0" id="search-addon"
+                                name="searchbtn">Search</button></span></li>
+                </div>
+            </form>
+            <form action="/logout" method="GET" class="d-flex cardmarginleft">
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+    </nav>
+    <div class="container">
+        <div class="d-flex justify-content-center mb-4"></div>
+        <div id="demo" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-6 text-center align-self-center"> <img class="img-fluid"
+                                    style="height:400px; width:400px;" src="/Product Images/{{result.[0].id}}.jpg">
+                            </div>
+                            <div class="col-md-6 info">
+                                <div class="row title text-center">
+                                    <div class="col">
+                                        <h2>{{result.[0].name}}</h2>
+                                    </div>
+                                </div>
+                                <h3 class="text-center">{{result.[0].type}}</h3>
+                                <h5 class="align-self-center text-center" id="reviews">{{result.[0].description}}</h5>
+
+                            </div>
+                        </div>
+                        <div class="row lower">
+                            <div class="col"> <a class="carousel-control-prev" href="#demo" data-slide="prev"><i
+                                        class="fa fa-arrow-left"></i></a> <a class="carousel-control-next" href="#demo"
+                                    data-slide="next"><i class="fa fa-arrow-right"></i></a> </div>
+                            <div class="col text-center align-self-center">
+                                <h2>{{result.[0].priceNow}}$</h2>
+                                <form id="addToCartForm" action="/cart" method="POST">
+                                    <input type="hidden" name="id" value="{{result.[0].id}}">
+                                    <input type="hidden" name="name" value="{{result.[0].name}}">
+                                    <input type="hidden" name="price" value="{{result.[0].priceNow}}">
+                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

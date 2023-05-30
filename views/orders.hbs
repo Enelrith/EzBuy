@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ez-Buy - Orders</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                    <img src="/logo/logo-no-background.svg" height="50" alt="Logo" loading="lazy" />
+                </a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/store">Store</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Cart</a>
+                    </li>
+                </ul>
+            </div>
+
+            <form action="/search" method="POST">
+                <div class="input-group rounded">
+                    <li> <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-addon" name="search" /></li>
+                    <li><span><button type="submit" class="input-group-text border-0" id="search-addon"
+                                name="searchbtn"><i class="fas fa-search"></i></button></span></li>
+                </div>
+            </form>
+            <form action="/logout" method="GET" class="d-flex cardmarginleft">
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+    </nav>
+
+    <body>
+        <div class="container">
+            <h1>Thank You for Your Purchase!</h1>
+            <p>Your order has been successfully placed.</p>
+            <div class="order-details">
+                <p>Username: <span>
+                        {{username}}
+                    </span></p>
+                <p>Order ID: <span>
+                        {{orderid}}
+                    </span></p>
+                <p>Estimated Shipping Date: <span>
+                        {{date}}
+                    </span></p>
+            </div>
+        </div>
+    </body>
+
+
+</html>

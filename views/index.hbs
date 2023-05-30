@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ez-Buy - Home</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                <img src="/logo/logo-no-background.svg" height="50" alt="Logo" loading="lazy" />
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/store">Store</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Cart</a>
+                    </li>
+                </ul>
+            </div>
+            <form action="/search" method="POST" class="d-flex">
+                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                    aria-describedby="search-addon" name="search">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+            </form>
+            <form action="/logout" method="GET" class="d-flex cardmarginleft">
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+        <div class="username-container desktop">
+            <span class="username">{{username}}</span>
+        </div>
+        <div class="username-container mobile">
+            <span class="username">{{username}}</span>
+        </div>
+        </div>
+    </nav>
+    <main>
+        <section class="welcome-section">
+            <div class="container">
+                <h1 class="welcome-title">Welcome to Our E-Shop, {{username}}!</h1>
+                <p class="welcome-text">
+                    At our E-Shop, we are dedicated to providing you with the best online shopping experience. We value
+                    the trust you place in us, which is why we prioritize security and privacy. Our secure payment
+                    gateways ensure that your transactions are protected, allowing you to shop with confidence. Your
+                    personal information is handled with utmost care, and we strictly adhere to industry standards to
+                    safeguard your data.
+                </p>
+                <p class="welcome-text">
+                    Stay updated with the latest trends, promotions, and exclusive offers by subscribing to our
+                    newsletter. Be the first to know about new arrivals, special discounts, and exciting sales events.
+                    Join our vibrant community of satisfied customers who have discovered the convenience and joy of
+                    shopping at our E-Shop.Thank you for choosing us as your preferred online shopping destination.
+                    Start exploring now and find exactly what you're looking for. Happy shopping!
+                    add this in html and css elements to make it display nicely on my website's home page
+
+                </p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Subscribe to Our Newsletter</h4>
+                    <p>Stay updated with the latest trends, promotions, and exclusive offers by subscribing to our
+                        newsletter. Be the first to know about new arrivals, special discounts, and exciting sales
+                        events.</p>
+                    <form>
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Your Email Address" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Subscribe</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <h4>Contact Us</h4>
+                    <p>If you have any questions or need assistance, feel free to reach out to our customer support
+                        team. We are here to help!</p>
+                    <ul class="contact-info">
+                        <li><i class="fa fa-envelope"></i> Email: d.arethas@mc-class.gr</li>
+                        <li><i class="fa fa-phone"></i> Phone: +306984262074</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
