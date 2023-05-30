@@ -529,7 +529,7 @@ app.post("/auth/register", (req, res) => {
       console.log(hashedPassword);
 
       db.query(
-        "INSERT INTO users SET?",
+        "INSERT INTO users SET ?",
         { username: name, email: email, password: hashedPassword },
         (error, result) => {
           if (error) {
@@ -549,6 +549,7 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.session.user;
   next();
 });
+
 app.post("/auth/login", (req, res) => {
   const { name, password } = req.body;
   db.query(
@@ -569,24 +570,13 @@ app.post("/auth/login", (req, res) => {
       const isPasswordMatched = await bcrypt.compare(password, user.password);
 
       if (isPasswordMatched) {
-        const sessionID = req.sessionID;
-        const userID = user.userid;
+        req.session.user = user;
+        req.session.username = name;
 
-        db.query(
-          "UPDATE users SET sessionid = ? WHERE userid = ?",
-          [sessionID, userID],
-          (error) => {
-            if (error) {
-              console.log(error);
-            } else {
-              req.session.user = user;
-              req.session.username = name;
-              console.log(userID);
-              console.log(sessionID);
-              return res.redirect("/");
-            }
-          }
-        );
+        console.log(user.userid);
+        console.log(req.sessionID);
+        
+        return res.redirect("/");
       } else {
         return res.render("login", {
           message: "Invalid username or password",
