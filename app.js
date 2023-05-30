@@ -20,7 +20,6 @@ const sessionStore = new MySQLStore({
   clearExpired: true,
   checkExpirationInterval: 900000,
   expiration: 86400000,
-  ssl: { ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem") },
 });
 var db = mysql.createConnection({
   host: process.env.DATABASE_HOST,
@@ -28,7 +27,6 @@ var db = mysql.createConnection({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE,
   port: process.env.DATABASE_PORT,
-  ssl: { ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem") },
 });
 const publicDir = path.join(__dirname, "./public");
 
