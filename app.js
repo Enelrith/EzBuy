@@ -9,6 +9,7 @@ const app = express();
 const session = require("express-session");
 const { exitCode, exit } = require("process");
 const crypto = require("crypto");
+const fs = require('fs');
 const MySQLStore = require("express-mysql-session")(session);
 const sessionStore = new MySQLStore({
   host: process.env.DATABASE_HOST,
