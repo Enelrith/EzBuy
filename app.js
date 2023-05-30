@@ -60,26 +60,35 @@ app.use(
   })
 );
 app.get("/", (req, res) => {
-  res.render("index", { username: req.session.username });
-  console.log(req.session.username);
-  console.log(req.sessionID);
+  if (!req.session.user) {
+    res.render("login");
+  } else {
+    res.render("index", { username: req.session.username });
+    console.log(req.session.username);
+    console.log(req.sessionID);
+  }
 });
 app.get("/register", (req, res) => {
   res.render("register");
 });
+
 app.get("/login", (req, res) => {
   res.render("login");
 });
 
 app.get("/store", (req, res) => {
-  db.query("SELECT * FROM products", (error, result) => {
-    if (error) {
-      console.log(error);
-      res.render("error"); // Render an error page
-    } else {
-      res.render("store", { products: result }); // Render the "store" page and pass the product data
-    }
-  });
+  if (!req.session.user) {
+    res.render("login");
+  } else {
+    db.query("SELECT * FROM products", (error, result) => {
+      if (error) {
+        console.log(error);
+        res.render("error"); // Render an error page
+      } else {
+        res.render("store", { products: result }); // Render the "store" page and pass the product data
+      }
+    });
+  }
 });
 
 app.get("/store/:id", (req, res) => {
@@ -98,18 +107,22 @@ app.get("/store/:id", (req, res) => {
   );
 });
 app.get("/checkout", (req, res) => {
-  const username = req.session.username;
-  db.query(
-    "SELECT * FROM cart WHERE username = ?",
-    [username],
-    (error, result) => {
-      if (error) {
-        console.log(error);
-      } else {
-        res.render("checkout", { checkout: result });
+  if (!req.session.user) {
+    res.render("login");
+  } else {
+    const username = req.session.username;
+    db.query(
+      "SELECT * FROM cart WHERE username = ?",
+      [username],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+        } else {
+          res.render("checkout", { checkout: result });
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 app.post("/auth/checkout", (req, res) => {
@@ -171,137 +184,161 @@ app.post("/auth/checkout", (req, res) => {
 });
 
 app.post("/cart", (req, res) => {
-  const username = req.session.username;
-  const productID = req.body.id;
-  const productName = req.body.name;
-  const price = req.body.price;
-  const startingQuantity = 1;
+  if (!req.session.user) {
+    res.render("login");
+  } else {
+    const username = req.session.username;
+    const productID = req.body.id;
+    const productName = req.body.name;
+    const price = req.body.price;
+    const startingQuantity = 1;
 
-  db.query("SELECT * FROM cart", (error, result) => {
-    if (error) {
-      console.log(error);
-      res.status(500).json({ error: "Failed to add the product to the cart" });
-      return;
-    }
-
-    if (result.length > 0) {
-      const updatedQuantity = result[0].quantity + 1;
-      const updatedPrice = result[0].price * updatedQuantity;
-      db.query(
-        "UPDATE cart SET quantity = ?, displayPrice = ?",
-        [updatedQuantity, updatedPrice],
-        (error) => {
-          if (error) {
-            console.log(error);
-            res.status(500).json({
-              error: "Failed to update the product quantity in the cart",
-            });
-          } else {
-            console.log("Product quantity updated in the cart");
-
-            // Fetch the updated cart data
-            db.query(
-              "SELECT * FROM cart",
-
-              (error, result) => {
-                if (error) {
-                  console.log(error);
-                  res.status(500).json({
-                    error: "Failed to fetch the updated cart data",
-                  });
-                } else {
-                  // Calculate the total price
-                  const totalPrice = result.reduce(
-                    (sum, item) => sum + item.displayPrice,
-                    0
-                  );
-                  console.log("Total price:", totalPrice);
-
-                  // Update the totalPrice in the cart table
-                  db.query(
-                    "UPDATE cart SET totalPrice = ?",
-                    [totalPrice],
-                    (error) => {
-                      if (error) {
-                        console.log(error);
-                        res.status(500).json({
-                          error: "Failed to update the total price in the cart",
-                        });
-                      } else {
-                        console.log("Total price updated in the cart");
-                        // Continue with your response and further logic
-                      }
-                    }
-                  );
-                }
-              }
-            );
-          }
+    db.query(
+      "SELECT * FROM cart WHERE username = ? AND id = ?",
+      [username, productID],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+          res
+            .status(500)
+            .json({ error: "Failed to add the product to the cart" });
+          return;
         }
-      );
-    } else {
-      db.query(
-        "INSERT INTO cart (id, name, price, quantity, displayPrice) VALUES (?,?,?,?,?)",
-        [productID, productName, price, startingQuantity, price],
-        (error) => {
-          if (error) {
-            console.log(error.sql);
-            console.log(error);
-            res
-              .status(500)
-              .json({ error: "Failed to add the product to the cart" });
-          } else {
-            console.log("Product added to cart");
-            // Fetch the updated cart data
-            db.query("SELECT * FROM cart", (error, result) => {
+
+        if (result.length > 0) {
+          const updatedQuantity = result[0].quantity + 1;
+          const updatedPrice = result[0].price * updatedQuantity;
+          db.query(
+            "UPDATE cart SET quantity = ?, displayPrice = ? WHERE username = ? AND id = ?",
+            [updatedQuantity, updatedPrice, username, productID],
+            (error) => {
               if (error) {
                 console.log(error);
                 res.status(500).json({
-                  error: "Failed to fetch the updated cart data",
+                  error: "Failed to update the product quantity in the cart",
                 });
               } else {
-                // Calculate the total price
-                const totalPrice = result.reduce(
-                  (sum, item) => sum + item.displayPrice,
-                  0
-                );
-                console.log("Total price:", totalPrice);
+                console.log("Product quantity updated in the cart");
 
-                // Update the totalPrice in the cart table
+                // Fetch the updated cart data
                 db.query(
-                  "UPDATE cart SET totalPrice = ?",
-                  [totalPrice],
-                  (error) => {
+                  "SELECT * FROM cart WHERE username = ?",
+                  [username],
+                  (error, result) => {
                     if (error) {
                       console.log(error);
                       res.status(500).json({
-                        error: "Failed to update the total price in the cart",
+                        error: "Failed to fetch the updated cart data",
                       });
                     } else {
-                      console.log("Total price updated in the cart");
-                      // Continue with your response and further logic
+                      // Calculate the total price
+                      const totalPrice = result.reduce(
+                        (sum, item) => sum + item.displayPrice,
+                        0
+                      );
+                      console.log("Total price:", totalPrice);
+
+                      // Update the totalPrice in the cart table
+                      db.query(
+                        "UPDATE cart SET totalPrice = ? WHERE username = ?",
+                        [totalPrice, username],
+                        (error) => {
+                          if (error) {
+                            console.log(error);
+                            res.status(500).json({
+                              error:
+                                "Failed to update the total price in the cart",
+                            });
+                          } else {
+                            console.log("Total price updated in the cart");
+                            // Continue with your response and further logic
+                          }
+                        }
+                      );
                     }
                   }
                 );
               }
-            });
-          }
+            }
+          );
+        } else {
+          db.query(
+            "INSERT INTO cart (username, id, name, price, quantity, displayPrice) VALUES (?,?,?,?,?,?)",
+            [username, productID, productName, price, startingQuantity, price],
+            (error) => {
+              if (error) {
+                console.log(error.sql);
+                console.log(error);
+                res
+                  .status(500)
+                  .json({ error: "Failed to add the product to the cart" });
+              } else {
+                console.log("Product added to cart");
+                // Fetch the updated cart data
+                db.query(
+                  "SELECT * FROM cart WHERE username = ?",
+                  [username],
+                  (error, result) => {
+                    if (error) {
+                      console.log(error);
+                      res.status(500).json({
+                        error: "Failed to fetch the updated cart data",
+                      });
+                    } else {
+                      // Calculate the total price
+                      const totalPrice = result.reduce(
+                        (sum, item) => sum + item.displayPrice,
+                        0
+                      );
+                      console.log("Total price:", totalPrice);
+
+                      // Update the totalPrice in the cart table
+                      db.query(
+                        "UPDATE cart SET totalPrice = ? WHERE username = ?",
+                        [totalPrice, username],
+                        (error) => {
+                          if (error) {
+                            console.log(error);
+                            res.status(500).json({
+                              error:
+                                "Failed to update the total price in the cart",
+                            });
+                          } else {
+                            console.log("Total price updated in the cart");
+                            // Continue with your response and further logic
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              }
+            }
+          );
         }
-      );
-    }
-  });
+      }
+    );
+  }
 });
 
 app.get("/cart", (req, res) => {
-  const username = req.session.username;
+  if (!req.session.user) {
+    res.render("login");
+  } else {
+    const username = req.session.username;
 
-  db.query("SELECT * FROM cart", (error, result) => {
-    if (error) {
-      console.log(error);
-    } else {
-      res.render("cart", { cart: result }); // Pass the cart data to the cart view
-    }
-  });
+    db.query(
+      "SELECT * FROM cart WHERE username = ?",
+      [username],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+        } else {
+          res.render("cart", { cart: result }); // Pass the cart data to the cart view
+        }
+      }
+    );
+  }
 });
 app.post("/removeqt", (req, res) => {
   const id = req.body.id;
@@ -477,13 +514,20 @@ app.post("/search", (req, res) => {
 });
 
 app.get("/categories", (req, res) => {
-  db.query("SELECT type FROM types WHERE type IS NOT NULL", (error, result) => {
-    if (error) {
-      console.log(error);
-    } else {
-      res.render("categories", { type: result });
-    }
-  });
+  if (!req.session.user) {
+    res.render("login");
+  } else {
+    db.query(
+      "SELECT type FROM types WHERE type IS NOT NULL",
+      (error, result) => {
+        if (error) {
+          console.log(error);
+        } else {
+          res.render("categories", { type: result });
+        }
+      }
+    );
+  }
 });
 
 app.get("/categories/:name", (req, res) => {
@@ -573,7 +617,7 @@ app.post("/auth/login", (req, res) => {
 
         console.log(user.userid);
         console.log(req.sessionID);
-        
+
         return res.redirect("/");
       } else {
         return res.render("login", {
