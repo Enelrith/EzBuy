@@ -20,15 +20,7 @@ const sessionStore = new MySQLStore({
   checkExpirationInterval: 900000,
   expiration: 86400000,
 });
-const db = mysql.createConnection({
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_ROOT,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE,
-  port: process.env.DATABASE_PORT,
-  ssl-mode=require,
-});
-
+var db=mysql.createConnection({host:process.env.DATABASE_HOST, user:process.env.DATABASE_ROOT, password:process.env.DATABASE_PASSWORD, database:process.env.DATABASE, port:process.env.DATABASE_PORT, ssl:{ca:fs.readFileSync("DigiCertGlobalRootCA.crt.pem")}});
 const publicDir = path.join(__dirname, "./public");
 
 app.use(express.static(publicDir));
